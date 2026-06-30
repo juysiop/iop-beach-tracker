@@ -80,3 +80,43 @@ html, body, #viewDiv {
     opacity: 0;
   }
 }
+#timelinePanel {
+  position: absolute;
+  left: 50%;
+  bottom: 24px;
+  transform: translateX(-50%);
+  z-index: 10;
+  width: min(760px, calc(100% - 40px));
+  background: rgba(255,255,255,0.95);
+  border-radius: 16px;
+  padding: 14px 18px;
+  box-shadow: 0 4px 18px rgba(0,0,0,0.22);
+  font-family: Arial, sans-serif;
+}
+
+#timelineHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+#todayButton {
+  border: none;
+  border-radius: 999px;
+  padding: 6px 12px;
+  background: #111;
+  color: white;
+  cursor: pointer;
+}
+
+#dateSlider {
+  width: 100%;
+}
+
+#timelineLabels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: #555;
+}

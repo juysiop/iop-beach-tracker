@@ -6,7 +6,7 @@ require([
   "esri/widgets/Expand"
 ], function(WebMap, MapView, Home, Legend, Expand) {
 
-  const webmap = new WebMap({
+  var webmap = new WebMap({
     portalItem: {
       id: "a21cf93379e24254be6f18b715b30887",
       portal: {
@@ -15,22 +15,22 @@ require([
     }
   });
 
-  const view = new MapView({
+  var view = new MapView({
     container: "viewDiv",
     map: webmap,
     center: [-79.765331, 32.792202],
     scale: 36111.909643
   });
 
-  const tractorPulse = document.getElementById("tractorPulse");
-  const slider = document.getElementById("dateSlider");
-  const selectedDateLabel = document.getElementById("selectedDateLabel");
-  const todayButton = document.getElementById("todayButton");
+  var tractorPulse = document.getElementById("tractorPulse");
+  var slider = document.getElementById("dateSlider");
+  var selectedDateLabel = document.getElementById("selectedDateLabel");
+  var todayButton = document.getElementById("todayButton");
 
-  const projectStart = new Date("2026-07-01T00:00:00");
-  const projectEnd = new Date("2026-10-01T00:00:00");
+  var projectStart = new Date("2026-07-01T00:00:00");
+  var projectEnd = new Date("2026-10-01T00:00:00");
 
-  const forecastWaypoints = [
+  var forecastWaypoints = [
     { date: new Date("2026-07-01T00:00:00"), lon: -79.7518, lat: 32.8019 },
     { date: new Date("2026-07-15T00:00:00"), lon: -79.7595, lat: 32.7978 },
     { date: new Date("2026-08-01T00:00:00"), lon: -79.7685, lat: 32.7934 },
@@ -39,19 +39,20 @@ require([
     { date: new Date("2026-10-01T00:00:00"), lon: -79.8155, lat: 32.7628 }
   ];
 
-  view.when(() => {
-    view.ui.add(new Home({ view }), "top-left");
+  view.when(function() {
+    view.ui.add(new Home({ view: view }), "top-left");
 
-    const legend = new Legend({ view });
+    var legend = new Legend({ view: view });
 
     view.ui.add(new Expand({
-      view,
+      view: view,
       content: legend,
       expanded: false
     }), "top-right");
 
     slider.addEventListener("input", updateTimeline);
-    todayButton.addEventListener("click", () => {
+
+    todayButton.addEventListener("click", function() {
       slider.value = 0;
       updateTimeline();
     });
@@ -63,8 +64,62 @@ require([
   });
 
   function getDateFromSlider(value) {
-    const start = projectStart.getTime();
-    const end = projectEnd.getTime();
+    var start = projectStart.getTime();
+    var end = projectEnd.getTime();
+    var percent = Number(value) / 100;
+    return new Date(start + (end - start) * percent);
+  }
+
+  function formatDate(date) {
+    return date.toLocaleDateString("en-US", {
+      month: "long",
+      day: "numeric"
+    });
+  }
+
+  function getForecastPosition(selectedDate) {
+    for (var i = 0; i < forecastWaypoints.length - 1; i++) {
+      var a = forecastWaypoints[i];
+      var b = forecastWaypoints[i + 1];
+
+      if (selectedDate >= a.date && selectedDate <= b.date) {
+        var span = b.date.getTime() - a.date.getTime();
+        var progress = (selectedDate.getTime() - a.date.getTime()) / span;
+
+        return {
+          longitude: a.lon + (b.lon - a.lon) * progress,
+          latitude: a.lat + (b.lat - a.lat) * progress
+        };
+      }
+    }
+
+    var last = forecastWaypoints[forecastWaypoints.length - 1];
+
+    return {
+      longitude: last.lon,
+      latitude: last.lat
+    };
+  }
+
+  function updateTimeline() {
+    var selectedDate = getDateFromSlider(slider.value);
+    selectedDateLabel.textContent = formatDate(selectedDate);
+
+    var position = getForecastPosition(selectedDate);
+
+    var screenPoint = view.toScreen({
+      type: "point",
+      longitude: position.longitude,
+      latitude: position.latitude,
+      spatialReference: { wkid: 4326 }
+    });
+
+    tractorPulse.style.display = "block";
+    tractorPulse.style.left = screenPoint.x + "px";
+    tractorPulse.style.top = screenPoint.y + "px";
+  }
+
+});    const end = projectEnd.getTime();
     const percent = Number(value) / 100;
     return new Date(start + (end - start) * percent);
   }

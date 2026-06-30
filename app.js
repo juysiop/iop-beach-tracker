@@ -1,10 +1,7 @@
 require([
   "esri/WebMap",
-  "esri/views/MapView",
-  "esri/widgets/Home",
-  "esri/widgets/Legend",
-  "esri/widgets/Expand"
-], function(WebMap, MapView, Home, Legend, Expand) {
+  "esri/views/MapView"
+], function(WebMap, MapView) {
 
   var webmap = new WebMap({
     portalItem: {
@@ -22,51 +19,7 @@ require([
     scale: 36111.909643
   });
 
-  var tractorPulse = document.getElementById("tractorPulse");
-  var slider = document.getElementById("dateSlider");
-  var selectedDateLabel = document.getElementById("selectedDateLabel");
-  var todayButton = document.getElementById("todayButton");
-
-  var projectStart = new Date("2026-07-01T00:00:00");
-  var projectEnd = new Date("2026-10-01T00:00:00");
-
-  var forecastWaypoints = [
-    { date: new Date("2026-07-01T00:00:00"), lon: -79.7518, lat: 32.8019 },
-    { date: new Date("2026-07-15T00:00:00"), lon: -79.7595, lat: 32.7978 },
-    { date: new Date("2026-08-01T00:00:00"), lon: -79.7685, lat: 32.7934 },
-    { date: new Date("2026-08-15T00:00:00"), lon: -79.7800, lat: 32.7868 },
-    { date: new Date("2026-09-01T00:00:00"), lon: -79.7945, lat: 32.7788 },
-    { date: new Date("2026-10-01T00:00:00"), lon: -79.8155, lat: 32.7628 }
-  ];
-
-  view.when(function() {
-    view.ui.add(new Home({ view: view }), "top-left");
-
-    var legend = new Legend({ view: view });
-
-    view.ui.add(new Expand({
-      view: view,
-      content: legend,
-      expanded: false
-    }), "top-right");
-
-    slider.addEventListener("input", updateTimeline);
-
-    todayButton.addEventListener("click", function() {
-      slider.value = 0;
-      updateTimeline();
-    });
-
-    view.watch("extent", updateTimeline);
-    view.watch("stationary", updateTimeline);
-
-    updateTimeline();
-  });
-
-  function getDateFromSlider(value) {
-    var start = projectStart.getTime();
-    var end = projectEnd.getTime();
-    var percent = Number(value) / 100;
+});    var percent = Number(value) / 100;
     return new Date(start + (end - start) * percent);
   }
 

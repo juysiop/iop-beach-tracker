@@ -75,7 +75,7 @@ slider.addEventListener("input", updateTimelineLabel);
 
 todayButton.addEventListener("click", () => {
   slider.value = 0;
-  selectedDateLabel.textContent = "Today";
+  updateTimelineLabel();
 });
 
   view.when(() => {

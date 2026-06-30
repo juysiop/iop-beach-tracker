@@ -3,8 +3,9 @@ require([
   "esri/views/MapView",
   "esri/widgets/Home",
   "esri/widgets/Legend",
-  "esri/widgets/Expand"
-], function(WebMap, MapView, Home, Legend, Expand) {
+  "esri/widgets/Expand",
+  "esri/geometry/Point"
+], function(WebMap, MapView, Home, Legend, Expand, Point) {
 
   const webmap = new WebMap({
     portalItem: {
@@ -59,12 +60,12 @@ function updateTimelineLabel() {
   selectedDateLabel.textContent = formatDate(selectedDate);
 
   const position = getForecastPosition(selectedDate);
-  const screenPoint = view.toScreen({
-    type: "point",
-    longitude: position.longitude,
-    latitude: position.latitude,
-    spatialReference: { wkid: 4326 }
-  });
+const mapPoint = new Point({
+  longitude: position.longitude,
+  latitude: position.latitude
+});
+
+const screenPoint = view.toScreen(mapPoint);
 
   tractorPulse.style.display = "block";
   tractorPulse.style.left = `${screenPoint.x}px`;

@@ -31,6 +31,15 @@ const todayButton = document.getElementById("todayButton");
 const projectStart = new Date("2026-07-01T00:00:00");
 const projectEnd = new Date("2026-10-01T00:00:00");
 
+  const forecastWaypoints = [
+  { date: new Date("2026-07-01"), lon: -79.7518, lat: 32.8019 },
+  { date: new Date("2026-07-15"), lon: -79.7595, lat: 32.7978 },
+  { date: new Date("2026-08-01"), lon: -79.7685, lat: 32.7934 },
+  { date: new Date("2026-08-15"), lon: -79.7800, lat: 32.7868 },
+  { date: new Date("2026-09-01"), lon: -79.7945, lat: 32.7788 },
+  { date: new Date("2026-10-01"), lon: -79.8155, lat: 32.7628 }
+];
+
 function getDateFromSlider(value) {
   const start = projectStart.getTime();
   const end = projectEnd.getTime();
@@ -73,6 +82,29 @@ todayButton.addEventListener("click", () => {
     view.watch("extent", updateTractorPulse);
     view.watch("stationary", updateTractorPulse);
   });
+
+  function getForecastPosition(selectedDate) {
+  for (let i = 0; i < forecastWaypoints.length - 1; i++) {
+    const a = forecastWaypoints[i];
+    const b = forecastWaypoints[i + 1];
+
+    if (selectedDate >= a.date && selectedDate <= b.date) {
+      const span = b.date.getTime() - a.date.getTime();
+      const progress = (selectedDate.getTime() - a.date.getTime()) / span;
+
+      return {
+        longitude: a.lon + (b.lon - a.lon) * progress,
+        latitude: a.lat + (b.lat - a.lat) * progress
+      };
+    }
+  }
+
+  const last = forecastWaypoints[forecastWaypoints.length - 1];
+  return {
+    longitude: last.lon,
+    latitude: last.lat
+  };
+}
 
   function updateTractorPulse() {
     const tractorLayer = webmap.layers.find(layer =>

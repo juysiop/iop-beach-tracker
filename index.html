@@ -21,7 +21,27 @@
   </div>
 
   <div id="tractorPulse"></div>
+<div id="timelinePanel">
+  <div id="timelineHeader">
+    <strong id="selectedDateLabel">Today</strong>
+    <button id="todayButton">Today</button>
+  </div>
 
+  <input
+    id="dateSlider"
+    type="range"
+    min="0"
+    max="100"
+    value="0"
+  />
+
+  <div id="timelineLabels">
+    <span>July</span>
+    <span>August</span>
+    <span>September</span>
+    <span>October</span>
+  </div>
+</div>
   <script src="app.js"></script>
 </body>
 </html>

@@ -89,10 +89,10 @@ todayButton.addEventListener("click", () => {
       expanded: false
     }), "top-right");
 
-    updateTractorPulse();
+    updateTimelineLabel();
 
-    view.watch("extent", updateTractorPulse);
-    view.watch("stationary", updateTractorPulse);
+view.watch("extent", updateTimelineLabel);
+view.watch("stationary", updateTimelineLabel);
   });
 
   function getForecastPosition(selectedDate) {

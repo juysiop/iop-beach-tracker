@@ -57,6 +57,18 @@ function formatDate(date) {
 function updateTimelineLabel() {
   const selectedDate = getDateFromSlider(slider.value);
   selectedDateLabel.textContent = formatDate(selectedDate);
+
+  const position = getForecastPosition(selectedDate);
+  const screenPoint = view.toScreen({
+    type: "point",
+    longitude: position.longitude,
+    latitude: position.latitude,
+    spatialReference: { wkid: 4326 }
+  });
+
+  tractorPulse.style.display = "block";
+  tractorPulse.style.left = `${screenPoint.x}px`;
+  tractorPulse.style.top = `${screenPoint.y}px`;
 }
 
 slider.addEventListener("input", updateTimelineLabel);

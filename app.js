@@ -24,6 +24,39 @@ require([
 
   const tractorPulse = document.getElementById("tractorPulse");
 
+  const slider = document.getElementById("dateSlider");
+const selectedDateLabel = document.getElementById("selectedDateLabel");
+const todayButton = document.getElementById("todayButton");
+
+const projectStart = new Date("2026-07-01T00:00:00");
+const projectEnd = new Date("2026-10-01T00:00:00");
+
+function getDateFromSlider(value) {
+  const start = projectStart.getTime();
+  const end = projectEnd.getTime();
+  const percent = Number(value) / 100;
+  return new Date(start + (end - start) * percent);
+}
+
+function formatDate(date) {
+  return date.toLocaleDateString("en-US", {
+    month: "long",
+    day: "numeric"
+  });
+}
+
+function updateTimelineLabel() {
+  const selectedDate = getDateFromSlider(slider.value);
+  selectedDateLabel.textContent = formatDate(selectedDate);
+}
+
+slider.addEventListener("input", updateTimelineLabel);
+
+todayButton.addEventListener("click", () => {
+  slider.value = 0;
+  selectedDateLabel.textContent = "Today";
+});
+
   view.when(() => {
     view.ui.add(new Home({ view }), "top-left");
 
